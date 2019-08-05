@@ -1,0 +1,53 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://repo.biocodellc.com/repository/maven-private/"
+            credentials {
+                username mavenUser
+                password mavenPass
+            }
+        }
+        mavenLocal()
+    }
+    dependencies {
+        classpath "org.biocode:gradle-fims:2.0.0"
+    }
+}
+
+apply plugin: "org.biocode.fims-app"
+
+if (!project.hasProperty('fimsCommonsVersion')) {
+    ext.fimsCommonsVersion = "2.1.15"
+}
+
+fims {
+    maven {
+        username mavenUser
+        password mavenPass
+    }
+}
+
+repositories {
+    add(fims.mavenFims())
+    mavenLocal()
+}
+
+dependencies {
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.4.RELEASE'
+    compile 'org.springframework:spring-jdbc:4.3.14.RELEASE'
+    compile 'org.apache.commons:commons-lang3:3.8'
+
+    compile 'org.slf4j:slf4j-log4j12:1.7.19'
+
+    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-moxy', version: '2.27'
+    compile group: 'org.glassfish.jersey.ext', name: 'jersey-spring4', version: '2.27'
+
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
+
+    compile group: 'com.auth0', name: 'java-jwt', version: '3.8.1'
+
+    compile composite.resolveDependency("org.biocode:biocode-fims-commons:${fimsCommonsVersion}", ":biocode-fims-commons")
+
+    testCompile "junit:junit-dep:4.10"
+    testCompile 'org.mockito:mockito-all:1.9.5'
+}
