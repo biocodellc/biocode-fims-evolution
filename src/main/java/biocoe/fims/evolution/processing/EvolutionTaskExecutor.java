@@ -19,7 +19,7 @@ public class EvolutionTaskExecutor {
     }
 
     // TODO maybe need to set a timeout? https://geowarin.github.io/completable-futures-with-spring-async.html
-    public void addTask(EvolutionTask task) {
+    public void addTask(Runnable task) {
         CompletableFuture.runAsync(task, executorService)
                 .whenComplete((v, err) -> {
                     if (err != null) {

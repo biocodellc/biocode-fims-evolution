@@ -34,8 +34,12 @@ public class EvolutionAppConfig {
         return new EvolutionService(ClientBuilder.newClient(), evolutionProperties);
     }
 
+    @Bean
+    public EvolutionTaskExecutor evolutionTaskExecutor() {
+        return new EvolutionTaskExecutor(Executors.newFixedThreadPool(5));
+    }
+
     public EvolutionDatasetAction evolutionDatasetAction() {
-        EvolutionTaskExecutor executor = new EvolutionTaskExecutor(Executors.newFixedThreadPool(5));
-        return new EvolutionDatasetAction(recordRepository, evolutionService(), executor, entityIdentifierRepository, evolutionProperties);
+        return new EvolutionDatasetAction(recordRepository, evolutionService(), evolutionTaskExecutor(), entityIdentifierRepository, evolutionProperties);
     }
 }

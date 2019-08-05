@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * @author rjewing
  */
-public class EvolutionTask implements Runnable {
+public class EvolutionUpdateCreateTask implements Runnable {
 
     private final EvolutionService evolutionService;
     private final BcidBuilder bcidBuilder;
@@ -20,8 +20,8 @@ public class EvolutionTask implements Runnable {
     private final List<Record> updatedRecords;
     private final String resolverEndpoint;
 
-    public EvolutionTask(EvolutionService evolutionService, BcidBuilder bcidBuilder, List<Record> newRecords,
-                         List<Record> updatedRecords, String resolverEndpoint) {
+    public EvolutionUpdateCreateTask(EvolutionService evolutionService, BcidBuilder bcidBuilder, List<Record> newRecords,
+                                     List<Record> updatedRecords, String resolverEndpoint) {
         this.evolutionService = evolutionService;
         this.bcidBuilder = bcidBuilder;
         this.newRecords = newRecords;

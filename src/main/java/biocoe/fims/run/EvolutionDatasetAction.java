@@ -12,7 +12,7 @@ import biocode.fims.run.Dataset;
 import biocode.fims.run.DatasetAction;
 import biocode.fims.utils.RecordHasher;
 import biocoe.fims.application.config.EvolutionProperties;
-import biocoe.fims.evolution.processing.EvolutionTask;
+import biocoe.fims.evolution.processing.EvolutionUpdateCreateTask;
 import biocoe.fims.evolution.processing.EvolutionTaskExecutor;
 import biocoe.fims.evolution.service.EvolutionService;
 import org.slf4j.Logger;
@@ -84,7 +84,7 @@ public class EvolutionDatasetAction implements DatasetAction {
 
                         // Submit a task here to communicate with the Evolution API asynchronously.
                         BcidBuilder bcidBuilder = new BcidBuilder(recordSet.entity(), recordSet.hasParent() ? recordSet.parent().entity() : null);
-                        EvolutionTask task = new EvolutionTask(evolutionService, bcidBuilder, newRecords, updatedRecords, resolverEndpoint);
+                        EvolutionUpdateCreateTask task = new EvolutionUpdateCreateTask(evolutionService, bcidBuilder, newRecords, updatedRecords, resolverEndpoint);
                         taskExecutor.addTask(task);
                     });
         } catch (Exception e) {

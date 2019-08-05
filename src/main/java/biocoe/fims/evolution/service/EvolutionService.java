@@ -4,6 +4,7 @@ import biocode.fims.api.services.AbstractRequest;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
 import biocoe.fims.application.config.EvolutionProperties;
 import biocoe.fims.evolution.models.EvolutionRecord;
+import biocoe.fims.evolution.models.EvolutionRecordReference;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -62,6 +63,26 @@ public class EvolutionService {
         executeRequest(new UpdateRequest(records));
     }
 
+    public void discovery(List<EvolutionRecordReference> records) {
+        if (records.size() == 0) return;
+
+        if (!authenticated() && !authenticate()) {
+            throw new FimsRuntimeException("Unable to authenticate with the Evolution API", 500);
+        }
+
+        executeRequest(new DiscoveryRequest(records));
+    }
+
+    public void retrieval(List<EvolutionRecordReference> records) {
+        if (records.size() == 0) return;
+
+        if (!authenticated() && !authenticate()) {
+            throw new FimsRuntimeException("Unable to authenticate with the Evolution API", 500);
+        }
+
+        executeRequest(new RetrievalRequest(records));
+    }
+
     private <T> T executeRequest(AbstractRequest<T> request) {
         try {
             request.addHeader("Authorization", "Bearer " + accessToken);
@@ -110,6 +131,28 @@ public class EvolutionService {
 
         public UpdateRequest(List<EvolutionRecord> records) {
             super("PUT", List.class, client, path, evolutionProps.api());
+
+            this.setHttpEntity(Entity.entity(records, MediaType.APPLICATION_JSON));
+            setAccepts(MediaType.APPLICATION_JSON);
+        }
+    }
+
+    private final class DiscoveryRequest extends AbstractRequest<List> {
+        private static final String path = "/discoveries";
+
+        public DiscoveryRequest(List<EvolutionRecordReference> records) {
+            super("POST", List.class, client, path, evolutionProps.api());
+
+            this.setHttpEntity(Entity.entity(records, MediaType.APPLICATION_JSON));
+            setAccepts(MediaType.APPLICATION_JSON);
+        }
+    }
+
+    private final class RetrievalRequest extends AbstractRequest<List> {
+        private static final String path = "/retrievals";
+
+        public RetrievalRequest(List<EvolutionRecordReference> records) {
+            super("POST", List.class, client, path, evolutionProps.api());
 
             this.setHttpEntity(Entity.entity(records, MediaType.APPLICATION_JSON));
             setAccepts(MediaType.APPLICATION_JSON);
