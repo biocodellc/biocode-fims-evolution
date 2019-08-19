@@ -1,5 +1,6 @@
 package biocoe.fims.run;
 
+import biocode.fims.application.config.FimsProperties;
 import biocode.fims.bcid.BcidBuilder;
 import biocode.fims.models.EntityIdentifier;
 import biocode.fims.models.Project;
@@ -35,15 +36,17 @@ public class EvolutionDatasetAction implements DatasetAction {
     private final EvolutionTaskExecutor taskExecutor;
     private final EntityIdentifierRepository entityIdentifierRepository;
     private final EvolutionProperties evolutionProperties;
+    private final FimsProperties props;
 
     public EvolutionDatasetAction(RecordRepository recordRepository, EvolutionService evolutionService,
                                   EvolutionTaskExecutor taskExecutor, EntityIdentifierRepository entityIdentifierRepository,
-                                  EvolutionProperties evolutionProperties) {
+                                  EvolutionProperties evolutionProperties, FimsProperties props) {
         this.recordRepository = recordRepository;
         this.evolutionService = evolutionService;
         this.taskExecutor = taskExecutor;
         this.entityIdentifierRepository = entityIdentifierRepository;
         this.evolutionProperties = evolutionProperties;
+        this.props = props;
     }
 
     @Override
@@ -83,7 +86,7 @@ public class EvolutionDatasetAction implements DatasetAction {
                         });
 
                         // Submit a task here to communicate with the Evolution API asynchronously.
-                        BcidBuilder bcidBuilder = new BcidBuilder(recordSet.entity(), recordSet.hasParent() ? recordSet.parent().entity() : null);
+                        BcidBuilder bcidBuilder = new BcidBuilder(recordSet.entity(), recordSet.hasParent() ? recordSet.parent().entity() : null, props.bcidResolverPrefix());
                         EvolutionUpdateCreateTask task = new EvolutionUpdateCreateTask(evolutionService, bcidBuilder, newRecords, updatedRecords, resolverEndpoint);
                         taskExecutor.addTask(task);
                     });

@@ -1,5 +1,6 @@
 package biocoe.fims.application.config;
 
+import biocode.fims.application.config.FimsProperties;
 import biocode.fims.repositories.EntityIdentifierRepository;
 import biocode.fims.repositories.RecordRepository;
 import biocoe.fims.evolution.processing.EvolutionTaskExecutor;
@@ -22,6 +23,8 @@ import java.util.concurrent.Executors;
 @Import({EvolutionProperties.class})
 public class EvolutionAppConfig {
     @Autowired
+    FimsProperties fimsProperties;
+    @Autowired
     EvolutionProperties evolutionProperties;
 
     @Autowired
@@ -40,6 +43,6 @@ public class EvolutionAppConfig {
     }
 
     public EvolutionDatasetAction evolutionDatasetAction() {
-        return new EvolutionDatasetAction(recordRepository, evolutionService(), evolutionTaskExecutor(), entityIdentifierRepository, evolutionProperties);
+        return new EvolutionDatasetAction(recordRepository, evolutionService(), evolutionTaskExecutor(), entityIdentifierRepository, evolutionProperties, fimsProperties);
     }
 }
