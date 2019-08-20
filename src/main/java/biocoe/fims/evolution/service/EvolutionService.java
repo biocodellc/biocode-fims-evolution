@@ -91,8 +91,12 @@ public class EvolutionService {
             if (e instanceof NotAuthorizedException && !triedRefresh) {
                 this.triedRefresh = true;
                 if (authenticate()) {
+                    this.triedRefresh = false;
                     return executeRequest(request);
                 }
+                // always reset to false so we can retry on every request
+                this.triedRefresh = false;
+                logger.error("Failed to execute request because authentication failed.");
             }
             throw e;
         }
