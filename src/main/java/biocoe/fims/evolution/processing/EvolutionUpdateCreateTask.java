@@ -5,6 +5,7 @@ import biocode.fims.records.Record;
 import biocode.fims.utils.RecordHasher;
 import biocoe.fims.evolution.models.EvolutionRecord;
 import biocoe.fims.evolution.service.EvolutionService;
+import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class EvolutionUpdateCreateTask implements Runnable {
                     return new EvolutionRecord(bcid, resolverEndpoint + bcid, record.properties());
                 }).collect(Collectors.toList());
 
-        evolutionService.create(evolutionRecords);
+        ListUtils.partition(evolutionRecords, 1000).forEach(evolutionService::create);
 
         evolutionRecords = updatedRecords.stream()
                 .map(record -> {
@@ -45,7 +46,7 @@ public class EvolutionUpdateCreateTask implements Runnable {
                     return new EvolutionRecord(bcid, resolverEndpoint + bcid, record.properties());
                 }).collect(Collectors.toList());
 
-        evolutionService.update(evolutionRecords);
+        ListUtils.partition(evolutionRecords, 1000).forEach(evolutionService::update);
     }
 
 }
