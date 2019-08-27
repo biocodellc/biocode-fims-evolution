@@ -1,10 +1,9 @@
-package biocoe.fims.evolution.processing;
+package biocode.fims.evolution.processing;
 
 import biocode.fims.bcid.BcidBuilder;
 import biocode.fims.records.Record;
-import biocode.fims.utils.RecordHasher;
-import biocoe.fims.evolution.models.EvolutionRecord;
-import biocoe.fims.evolution.service.EvolutionService;
+import biocode.fims.evolution.models.EvolutionRecord;
+import biocode.fims.evolution.service.EvolutionService;
 import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;

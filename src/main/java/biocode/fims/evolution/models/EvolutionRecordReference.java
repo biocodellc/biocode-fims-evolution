@@ -1,9 +1,7 @@
-package biocoe.fims.evolution.models;
+package biocode.fims.evolution.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import java.util.Map;
 
 /**
  * @author rjewing

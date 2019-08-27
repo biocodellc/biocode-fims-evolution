@@ -1,10 +1,10 @@
-package biocoe.fims.evolution.service;
+package biocode.fims.evolution.service;
 
 import biocode.fims.api.services.AbstractRequest;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
-import biocoe.fims.application.config.EvolutionProperties;
-import biocoe.fims.evolution.models.EvolutionRecord;
-import biocoe.fims.evolution.models.EvolutionRecordReference;
+import biocode.fims.application.config.EvolutionProperties;
+import biocode.fims.evolution.models.EvolutionRecord;
+import biocode.fims.evolution.models.EvolutionRecordReference;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.security.rsa.RSAPrivateKeyImpl;
 
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.WebApplicationException;
@@ -20,7 +19,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import java.security.interfaces.ECPrivateKey;
-import java.security.interfaces.RSAPrivateKey;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

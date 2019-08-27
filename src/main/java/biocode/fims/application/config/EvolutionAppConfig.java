@@ -1,11 +1,10 @@
-package biocoe.fims.application.config;
+package biocode.fims.application.config;
 
-import biocode.fims.application.config.FimsProperties;
 import biocode.fims.repositories.EntityIdentifierRepository;
 import biocode.fims.repositories.RecordRepository;
-import biocoe.fims.evolution.processing.EvolutionTaskExecutor;
-import biocoe.fims.evolution.service.EvolutionService;
-import biocoe.fims.run.EvolutionDatasetAction;
+import biocode.fims.evolution.processing.EvolutionTaskExecutor;
+import biocode.fims.evolution.service.EvolutionService;
+import biocode.fims.run.EvolutionDatasetAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
