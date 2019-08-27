@@ -9,6 +9,7 @@ import biocode.fims.records.Record;
 import biocode.fims.records.RecordSet;
 import biocode.fims.repositories.EntityIdentifierRepository;
 import biocode.fims.repositories.RecordRepository;
+import biocode.fims.service.ExpeditionService;
 import biocode.fims.utils.RecordHasher;
 import biocode.fims.application.config.EvolutionProperties;
 import biocode.fims.evolution.processing.EvolutionUpdateCreateTask;
@@ -31,16 +32,18 @@ public class EvolutionDatasetAction implements DatasetAction {
 
     private final RecordRepository recordRepository;
     private final EvolutionService evolutionService;
+    private final ExpeditionService expeditionService;
     private final EvolutionTaskExecutor taskExecutor;
     private final EntityIdentifierRepository entityIdentifierRepository;
     private final EvolutionProperties evolutionProperties;
     private final FimsProperties props;
 
     public EvolutionDatasetAction(RecordRepository recordRepository, EvolutionService evolutionService,
-                                  EvolutionTaskExecutor taskExecutor, EntityIdentifierRepository entityIdentifierRepository,
+                                  ExpeditionService expeditionService, EvolutionTaskExecutor taskExecutor, EntityIdentifierRepository entityIdentifierRepository,
                                   EvolutionProperties evolutionProperties, FimsProperties props) {
         this.recordRepository = recordRepository;
         this.evolutionService = evolutionService;
+        this.expeditionService = expeditionService;
         this.taskExecutor = taskExecutor;
         this.entityIdentifierRepository = entityIdentifierRepository;
         this.evolutionProperties = evolutionProperties;
@@ -85,7 +88,7 @@ public class EvolutionDatasetAction implements DatasetAction {
 
                         // Submit a task here to communicate with the Evolution API asynchronously.
                         BcidBuilder bcidBuilder = new BcidBuilder(recordSet.entity(), recordSet.hasParent() ? recordSet.parent().entity() : null, props.bcidResolverPrefix());
-                        EvolutionUpdateCreateTask task = new EvolutionUpdateCreateTask(evolutionService, bcidBuilder, newRecords, updatedRecords, resolverEndpoint);
+                        EvolutionUpdateCreateTask task = new EvolutionUpdateCreateTask(evolutionService, expeditionService, bcidBuilder, newRecords, updatedRecords, resolverEndpoint, props.userURIPrefix());
                         taskExecutor.addTask(task);
                     });
         } catch (Exception e) {

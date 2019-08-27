@@ -11,9 +11,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class EvolutionRecordReference {
     public String recordGuid;
     public String eventId;
+    public String userId;
 
-    public EvolutionRecordReference(String recordGuid, String eventId) {
+    public EvolutionRecordReference(String recordGuid, String eventId, String userId) {
         this.recordGuid = recordGuid;
         this.eventId = eventId;
+        this.userId = userId;
     }
 }

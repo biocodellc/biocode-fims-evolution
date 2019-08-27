@@ -5,6 +5,7 @@ import biocode.fims.repositories.RecordRepository;
 import biocode.fims.evolution.processing.EvolutionTaskExecutor;
 import biocode.fims.evolution.service.EvolutionService;
 import biocode.fims.run.EvolutionDatasetAction;
+import biocode.fims.service.ExpeditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,8 @@ public class EvolutionAppConfig {
     RecordRepository recordRepository;
     @Autowired
     EntityIdentifierRepository entityIdentifierRepository;
+    @Autowired
+    ExpeditionService expeditionService;
 
     @Bean
     public EvolutionService evolutionService() {
@@ -42,6 +45,6 @@ public class EvolutionAppConfig {
     }
 
     public EvolutionDatasetAction evolutionDatasetAction() {
-        return new EvolutionDatasetAction(recordRepository, evolutionService(), evolutionTaskExecutor(), entityIdentifierRepository, evolutionProperties, fimsProperties);
+        return new EvolutionDatasetAction(recordRepository, evolutionService(), expeditionService, evolutionTaskExecutor(), entityIdentifierRepository, evolutionProperties, fimsProperties);
     }
 }
