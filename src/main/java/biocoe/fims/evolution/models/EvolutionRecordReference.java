@@ -12,8 +12,10 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EvolutionRecordReference {
     public String recordGuid;
+    public String eventId;
 
-    public EvolutionRecordReference(String recordGuid) {
+    public EvolutionRecordReference(String recordGuid, String eventId) {
         this.recordGuid = recordGuid;
+        this.eventId = eventId;
     }
 }

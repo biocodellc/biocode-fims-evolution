@@ -8,6 +8,7 @@ import biocoe.fims.evolution.service.EvolutionService;
 import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -32,10 +33,12 @@ public class EvolutionUpdateCreateTask implements Runnable {
 
     @Override
     public void run() {
+        String eventId = UUID.randomUUID().toString();
+
         List<EvolutionRecord> evolutionRecords = newRecords.stream()
                 .map(record -> {
                     String bcid = bcidBuilder.build(record);
-                    return new EvolutionRecord(bcid, resolverEndpoint + bcid, record.properties());
+                    return new EvolutionRecord(bcid, resolverEndpoint + bcid, record.properties(), eventId);
                 }).collect(Collectors.toList());
 
         ListUtils.partition(evolutionRecords, 1000).forEach(evolutionService::create);
@@ -43,7 +46,7 @@ public class EvolutionUpdateCreateTask implements Runnable {
         evolutionRecords = updatedRecords.stream()
                 .map(record -> {
                     String bcid = bcidBuilder.build(record);
-                    return new EvolutionRecord(bcid, resolverEndpoint + bcid, record.properties());
+                    return new EvolutionRecord(bcid, resolverEndpoint + bcid, record.properties(), eventId);
                 }).collect(Collectors.toList());
 
         ListUtils.partition(evolutionRecords, 1000).forEach(evolutionService::update);

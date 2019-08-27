@@ -14,10 +14,12 @@ public class EvolutionRecord {
     public String guid;
     public String url;
     public Map<String, Object> data;
+    public String eventId;
 
-    public EvolutionRecord(String guid, String url, Map<String, Object> data) {
+    public EvolutionRecord(String guid, String url, Map<String, Object> data, String eventId) {
         this.guid = guid;
         this.url = url;
         this.data = data;
+        this.eventId = eventId;
     }
 }
