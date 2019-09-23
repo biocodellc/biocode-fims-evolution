@@ -88,7 +88,19 @@ public class EvolutionDatasetAction implements DatasetAction {
 
                         // Submit a task here to communicate with the Evolution API asynchronously.
                         BcidBuilder bcidBuilder = new BcidBuilder(recordSet.entity(), recordSet.hasParent() ? recordSet.parent().entity() : null, props.bcidResolverPrefix());
-                        EvolutionUpdateCreateTask task = new EvolutionUpdateCreateTask(evolutionService, expeditionService, bcidBuilder, newRecords, updatedRecords, resolverEndpoint, props.userURIPrefix());
+                        RecordSet parent = recordSet.parent();
+                        BcidBuilder parentBcidBuilder = recordSet.hasParent() ? new BcidBuilder(parent.entity(), parent.hasParent() ? parent.parent().entity() : null, props.bcidResolverPrefix()) : null;
+                        EvolutionUpdateCreateTask task = new EvolutionUpdateCreateTask(
+                                evolutionService,
+                                expeditionService,
+                                bcidBuilder,
+                                newRecords,
+                                updatedRecords,
+                                recordSet.parent(),
+                                parentBcidBuilder,
+                                resolverEndpoint,
+                                props.userURIPrefix()
+                        );
                         taskExecutor.addTask(task);
                     });
         } catch (Exception e) {
