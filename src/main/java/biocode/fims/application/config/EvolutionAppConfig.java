@@ -1,10 +1,11 @@
-package biocoe.fims.application.config;
+package biocode.fims.application.config;
 
 import biocode.fims.repositories.EntityIdentifierRepository;
 import biocode.fims.repositories.RecordRepository;
-import biocoe.fims.evolution.processing.EvolutionTaskExecutor;
-import biocoe.fims.evolution.service.EvolutionService;
-import biocoe.fims.run.EvolutionDatasetAction;
+import biocode.fims.evolution.processing.EvolutionTaskExecutor;
+import biocode.fims.evolution.service.EvolutionService;
+import biocode.fims.run.EvolutionDatasetAction;
+import biocode.fims.service.ExpeditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,12 +23,16 @@ import java.util.concurrent.Executors;
 @Import({EvolutionProperties.class})
 public class EvolutionAppConfig {
     @Autowired
+    FimsProperties fimsProperties;
+    @Autowired
     EvolutionProperties evolutionProperties;
 
     @Autowired
     RecordRepository recordRepository;
     @Autowired
     EntityIdentifierRepository entityIdentifierRepository;
+    @Autowired
+    ExpeditionService expeditionService;
 
     @Bean
     public EvolutionService evolutionService() {
@@ -40,6 +45,6 @@ public class EvolutionAppConfig {
     }
 
     public EvolutionDatasetAction evolutionDatasetAction() {
-        return new EvolutionDatasetAction(recordRepository, evolutionService(), evolutionTaskExecutor(), entityIdentifierRepository, evolutionProperties);
+        return new EvolutionDatasetAction(recordRepository, evolutionService(), expeditionService, evolutionTaskExecutor(), entityIdentifierRepository, evolutionProperties, fimsProperties);
     }
 }

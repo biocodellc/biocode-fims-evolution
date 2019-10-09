@@ -1,4 +1,4 @@
-package biocoe.fims.application.config;
+package biocode.fims.application.config;
 
 import biocode.fims.fimsExceptions.FimsRuntimeException;
 import org.postgresql.util.Base64;

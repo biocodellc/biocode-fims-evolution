@@ -1,5 +1,6 @@
-package biocoe.fims.run;
+package biocode.fims.run;
 
+import biocode.fims.application.config.FimsProperties;
 import biocode.fims.bcid.BcidBuilder;
 import biocode.fims.models.EntityIdentifier;
 import biocode.fims.models.Project;
@@ -8,13 +9,12 @@ import biocode.fims.records.Record;
 import biocode.fims.records.RecordSet;
 import biocode.fims.repositories.EntityIdentifierRepository;
 import biocode.fims.repositories.RecordRepository;
-import biocode.fims.run.Dataset;
-import biocode.fims.run.DatasetAction;
+import biocode.fims.service.ExpeditionService;
 import biocode.fims.utils.RecordHasher;
-import biocoe.fims.application.config.EvolutionProperties;
-import biocoe.fims.evolution.processing.EvolutionUpdateCreateTask;
-import biocoe.fims.evolution.processing.EvolutionTaskExecutor;
-import biocoe.fims.evolution.service.EvolutionService;
+import biocode.fims.application.config.EvolutionProperties;
+import biocode.fims.evolution.processing.EvolutionUpdateCreateTask;
+import biocode.fims.evolution.processing.EvolutionTaskExecutor;
+import biocode.fims.evolution.service.EvolutionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,18 +32,22 @@ public class EvolutionDatasetAction implements DatasetAction {
 
     private final RecordRepository recordRepository;
     private final EvolutionService evolutionService;
+    private final ExpeditionService expeditionService;
     private final EvolutionTaskExecutor taskExecutor;
     private final EntityIdentifierRepository entityIdentifierRepository;
     private final EvolutionProperties evolutionProperties;
+    private final FimsProperties props;
 
     public EvolutionDatasetAction(RecordRepository recordRepository, EvolutionService evolutionService,
-                                  EvolutionTaskExecutor taskExecutor, EntityIdentifierRepository entityIdentifierRepository,
-                                  EvolutionProperties evolutionProperties) {
+                                  ExpeditionService expeditionService, EvolutionTaskExecutor taskExecutor, EntityIdentifierRepository entityIdentifierRepository,
+                                  EvolutionProperties evolutionProperties, FimsProperties props) {
         this.recordRepository = recordRepository;
         this.evolutionService = evolutionService;
+        this.expeditionService = expeditionService;
         this.taskExecutor = taskExecutor;
         this.entityIdentifierRepository = entityIdentifierRepository;
         this.evolutionProperties = evolutionProperties;
+        this.props = props;
     }
 
     @Override
@@ -83,8 +87,20 @@ public class EvolutionDatasetAction implements DatasetAction {
                         });
 
                         // Submit a task here to communicate with the Evolution API asynchronously.
-                        BcidBuilder bcidBuilder = new BcidBuilder(recordSet.entity(), recordSet.hasParent() ? recordSet.parent().entity() : null);
-                        EvolutionUpdateCreateTask task = new EvolutionUpdateCreateTask(evolutionService, bcidBuilder, newRecords, updatedRecords, resolverEndpoint);
+                        BcidBuilder bcidBuilder = new BcidBuilder(recordSet.entity(), recordSet.hasParent() ? recordSet.parent().entity() : null, props.bcidResolverPrefix());
+                        RecordSet parent = recordSet.parent();
+                        BcidBuilder parentBcidBuilder = recordSet.hasParent() ? new BcidBuilder(parent.entity(), parent.hasParent() ? parent.parent().entity() : null, props.bcidResolverPrefix()) : null;
+                        EvolutionUpdateCreateTask task = new EvolutionUpdateCreateTask(
+                                evolutionService,
+                                expeditionService,
+                                bcidBuilder,
+                                newRecords,
+                                updatedRecords,
+                                recordSet.parent(),
+                                parentBcidBuilder,
+                                resolverEndpoint,
+                                props.userURIPrefix()
+                        );
                         taskExecutor.addTask(task);
                     });
         } catch (Exception e) {

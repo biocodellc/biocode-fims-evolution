@@ -1,9 +1,7 @@
-package biocoe.fims.evolution.models;
+package biocode.fims.evolution.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import java.util.Map;
 
 /**
  * @author rjewing
@@ -12,8 +10,12 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EvolutionRecordReference {
     public String recordGuid;
+    public String eventId;
+    public String userId;
 
-    public EvolutionRecordReference(String recordGuid) {
+    public EvolutionRecordReference(String recordGuid, String eventId, String userId) {
         this.recordGuid = recordGuid;
+        this.eventId = eventId;
+        this.userId = userId;
     }
 }
