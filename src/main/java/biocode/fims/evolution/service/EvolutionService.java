@@ -1,6 +1,7 @@
 package biocode.fims.evolution.service;
 
 import biocode.fims.api.services.AbstractRequest;
+import biocode.fims.api.services.RateLimiter;
 import biocode.fims.fimsExceptions.FimsRuntimeException;
 import biocode.fims.application.config.EvolutionProperties;
 import biocode.fims.evolution.models.EvolutionRecord;
@@ -10,6 +11,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.poi.ss.formula.functions.Rate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +37,12 @@ public class EvolutionService {
     private final EvolutionProperties evolutionProps;
     private String accessToken;
     private boolean triedRefresh;
+    private RateLimiter rateLimiter;
 
     public EvolutionService(Client client, EvolutionProperties evolutionProps) {
         this.client = client;
         this.evolutionProps = evolutionProps;
+        this.rateLimiter = RateLimiter.create(8);
     }
 
     public void create(List<EvolutionRecord> records) {
@@ -84,6 +88,7 @@ public class EvolutionService {
     private <T> T executeRequest(AbstractRequest<T> request) {
         try {
             request.addHeader("Authorization", "Bearer " + accessToken);
+            this.rateLimiter.consume();
             return request.execute();
         } catch (WebApplicationException e) {
             if (e instanceof NotAuthorizedException && !triedRefresh) {
@@ -97,6 +102,8 @@ public class EvolutionService {
                 logger.error("Failed to execute request because authentication failed.");
             }
             throw e;
+        } catch (InterruptedException e) {
+            throw new FimsRuntimeException(500, e);
         }
     }
 
