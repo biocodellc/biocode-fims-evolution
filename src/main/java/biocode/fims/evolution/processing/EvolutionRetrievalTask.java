@@ -2,6 +2,7 @@ package biocode.fims.evolution.processing;
 
 import biocode.fims.evolution.models.EvolutionRecordReference;
 import biocode.fims.evolution.service.EvolutionService;
+import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class EvolutionRetrievalTask implements Runnable {
 
     @Override
     public void run() {
-        evolutionService.retrieval(references);
+        ListUtils.partition(references, 10000).forEach(evolutionService::retrieval);
     }
 
 }
